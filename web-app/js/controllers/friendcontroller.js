@@ -10,7 +10,7 @@ friend.controller('FriendCtrl', function ($scope, $http, friends, friendService)
 
     $scope.init = function () {
         feedService.listItems(function (data) {
-            var _friends = [];
+            var _friends = {};
             for (var i = 0; i < data.length; i++) {
                 var element = data[i];
                 if (element) {
@@ -18,17 +18,7 @@ friend.controller('FriendCtrl', function ($scope, $http, friends, friendService)
                 }
             }
             $scope.friends = _friends;
-//            $scope.$apply();
         });
-//        $http.get('http://localhost:8080/tagus/friend/list').success(function (data) {
-//            for (var i = 0; i < data.length; i++) {
-//                var element = data[i];
-//                if (element) {
-//                    $scope.friends[element.id] = element;
-//                }
-//
-//            }
-//        });
     };
 
     $scope.init();
@@ -52,9 +42,9 @@ friend.controller('FriendCtrl', function ($scope, $http, friends, friendService)
            event.stopPropagation();
         }
         $scope.actionButton = "ADD";
-        delete $scope.friends[0];
         $scope.currentId = 0;
         $.mobile.changePage($('#section-list-friend'), {changeHash: false});
+        delete $scope.friends[0];
     };
 
     //------------ Update item -----------------
@@ -74,29 +64,15 @@ friend.controller('FriendCtrl', function ($scope, $http, friends, friendService)
         toJson = $.param(toJson);
         feedService.updateItem(toJson, function (item) {
             $scope.gotoList();
-//            $scope.$apply();
         });
 
-//        var toJson = {friend:JSON.stringify($scope.friends[$scope.currentId])};
-//        toJson = $.param(toJson);
-//        $http.post("http://localhost:8080/tagus/friend/update", toJson)
-//            .success(function (item, status, headers, config) {
-//                if (item.errors || item.message) {
-//                    return false;
-//                }
-//                $scope.gotoList();
-//                $.mobile.changePage($('#section-list-friend'));
-//            }).error(function (item, status, headers, config) {
-//                //var eltOnError = item;
-//
-//            });
     };
     //------------ End update item -----------------
 
     //------------ Add new item -----------------
     var addItem = function () {
-        $scope.friends[0] = {firstname:''};
         $.mobile.changePage($('#section-show-friend'), {changeHash: false});
+        $scope.friends[0] = {firstname:''};
         $scope.actionButton = "CREATE";
     };
 
@@ -112,23 +88,7 @@ friend.controller('FriendCtrl', function ($scope, $http, friends, friendService)
             $scope.friends[item.id] = item;
             delete $scope.friends[0];
             $scope.gotoList();
-//            $scope.$apply();
         });
-
-//        var toJson = {friend:JSON.stringify($scope.friends[0])};
-//        toJson = $.param(toJson);
-//        $http.post("http://localhost:8080/tagus/friend/save", toJson)
-//            .success(function (item, status, headers, config) {
-//                if (item.errors || item.message) {
-//                    return false;
-//                }
-//                $scope.friends[item.id] = item;
-//                delete $scope.friends[0];
-//                $scope.gotoList();
-//            }).error(function (item, status, headers, config) {
-//
-//
-//            });
     };
     //------------ End add new item -----------------
 
@@ -147,22 +107,7 @@ friend.controller('FriendCtrl', function ($scope, $http, friends, friendService)
         feedService.deleteItem(toJson, function (item) {
             delete $scope.friends[$scope.currentId]
             $scope.gotoList();
-            //$scope.$apply();
         });
-
-//        var toJson = {id:$scope.currentId};
-//        toJson = $.param(toJson);
-//        $http.post("http://localhost:8080/tagus/friend/delete", toJson)
-//            .success(function (item, status, headers, config) {
-//                if (item.errors || item.message) {
-//                    return false;
-//                }
-//                delete $scope.friends[$scope.currentId]
-//                $scope.gotoList();
-//            }).error(function (item, status, headers, config) {
-//
-//
-//            });
     };
     //------------ Delete item -----------------
 });

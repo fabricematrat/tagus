@@ -73,11 +73,12 @@ class FriendController {
         }
       }
 
+      Friend friendReceived = new Friend(jsonObject)
       new DefaultGrailsDomainClass(Friend.class).persistentProperties.each() {
           if (it.oneToOne || it.embedded) {
             friendInstance[it.name] = it.type.get(jsonObject["${it.name}.id"])
           } else {
-            friendInstance[it.name] = jsonObject[it.name]
+            friendInstance[it.name] = friendReceived[it.name]
           }
       }
       
