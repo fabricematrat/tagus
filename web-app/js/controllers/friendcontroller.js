@@ -18,7 +18,7 @@ friend.controller('FriendCtrl', function ($scope, $http, friends, friendService)
                 }
             }
             $scope.friends = _friends;
-            $scope.$apply();
+//            $scope.$apply();
         });
 //        $http.get('http://localhost:8080/tagus/friend/list').success(function (data) {
 //            for (var i = 0; i < data.length; i++) {
@@ -54,13 +54,14 @@ friend.controller('FriendCtrl', function ($scope, $http, friends, friendService)
         $scope.actionButton = "ADD";
         delete $scope.friends[0];
         $scope.currentId = 0;
-        $.mobile.changePage($('#section-list-friend'));
+        $.mobile.changePage($('#section-list-friend'), {changeHash: false});
     };
 
     //------------ Update item -----------------
     $scope.clicked = function (val) {
         $scope.currentId = val;
         $scope.actionButton = "UPDATE";
+        $.mobile.changePage($('#section-show-friend'), {changeHash: false});
     };
 
     var updateItem = function () {
@@ -71,9 +72,9 @@ friend.controller('FriendCtrl', function ($scope, $http, friends, friendService)
 
         var toJson = {friend:JSON.stringify($scope.friends[$scope.currentId])};
         toJson = $.param(toJson);
-        feedService.updatedItem(toJson, function (item) {
+        feedService.updateItem(toJson, function (item) {
             $scope.gotoList();
-            $scope.$apply();
+//            $scope.$apply();
         });
 
 //        var toJson = {friend:JSON.stringify($scope.friends[$scope.currentId])};
@@ -95,7 +96,7 @@ friend.controller('FriendCtrl', function ($scope, $http, friends, friendService)
     //------------ Add new item -----------------
     var addItem = function () {
         $scope.friends[0] = {firstname:''};
-        $.mobile.changePage($('#section-show-friend'));
+        $.mobile.changePage($('#section-show-friend'), {changeHash: false});
         $scope.actionButton = "CREATE";
     };
 
@@ -111,7 +112,7 @@ friend.controller('FriendCtrl', function ($scope, $http, friends, friendService)
             $scope.friends[item.id] = item;
             delete $scope.friends[0];
             $scope.gotoList();
-            $scope.$apply();
+//            $scope.$apply();
         });
 
 //        var toJson = {friend:JSON.stringify($scope.friends[0])};
@@ -146,7 +147,7 @@ friend.controller('FriendCtrl', function ($scope, $http, friends, friendService)
         feedService.deleteItem(toJson, function (item) {
             delete $scope.friends[$scope.currentId]
             $scope.gotoList();
-            $scope.$apply();
+            //$scope.$apply();
         });
 
 //        var toJson = {id:$scope.currentId};
