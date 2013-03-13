@@ -3,6 +3,7 @@
 friend.controller('FriendCtrl', function ($scope, $http, friends, friendService) {
     var feedService = friendService.feed;
     $scope.friends = friends;
+    $scope.form = {};
     $scope.currentId = 0;
     $scope.actionButton = "ADD";
 
@@ -44,12 +45,18 @@ friend.controller('FriendCtrl', function ($scope, $http, friends, friendService)
         $scope.actionButton = "ADD";
         $scope.currentId = 0;
         $.mobile.changePage($('#section-list-friend'), {changeHash: false});
-        delete $scope.friends[0];
+        $scope.form = {};
     };
 
     //------------ Update item -----------------
     $scope.clicked = function (val) {
         $scope.currentId = val;
+        if ($scope.currentId != 0) {
+            $scope.form = $scope.friends[$scope.currentId];
+        } else {
+            $scope.form = {};
+        }
+
         $scope.actionButton = "UPDATE";
         $.mobile.changePage($('#section-show-friend'), {changeHash: false});
     };
@@ -57,12 +64,13 @@ friend.controller('FriendCtrl', function ($scope, $http, friends, friendService)
     var updateItem = function () {
         //TODO remove view specific code to directive
         if ($('#input-friend-registrationDate')) {
-          $scope.friends[$scope.currentId].registrationDate =  $('#input-friend-registrationDate').scroller('getDate', true);
+          $scope.form.registrationDate =  $('#input-friend-registrationDate').scroller('getDate', true);
         }
 
-        var toJson = {friend:JSON.stringify($scope.friends[$scope.currentId])};
+        var toJson = {friend:JSON.stringify($scope.form)};
         toJson = $.param(toJson);
         feedService.updateItem(toJson, function (item) {
+            $scope.friends[$scope.currentId] = angular.copy($scope.form);
             $scope.gotoList();
         });
 
@@ -72,21 +80,20 @@ friend.controller('FriendCtrl', function ($scope, $http, friends, friendService)
     //------------ Add new item -----------------
     var addItem = function () {
         $.mobile.changePage($('#section-show-friend'), {changeHash: false});
-        $scope.friends[0] = {firstname:''};
+        //$scope.friends[0] = {firstname:''};
         $scope.actionButton = "CREATE";
     };
 
     var createItem = function () {
         //TODO remove view specific code to directive
         if ($('#input-friend-registrationDate')) {
-            $scope.friends[$scope.currentId].registrationDate =  $('#input-friend-registrationDate').scroller('getDate', true);
+            $scope.form.registrationDate =  $('#input-friend-registrationDate').scroller('getDate', true);
         }
 
-        var toJson = {friend:JSON.stringify($scope.friends[0])};
+        var toJson = {friend:JSON.stringify($scope.form)};
         toJson = $.param(toJson);
         feedService.createItem(toJson, function (item) {
-            $scope.friends[item.id] = item;
-            delete $scope.friends[0];
+            $scope.friends[item.id] = angular.copy($scope.form);
             $scope.gotoList();
         });
     };

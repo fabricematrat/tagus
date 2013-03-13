@@ -1,10 +1,10 @@
 <div data-role="content">
     <form id="form-update-friend" name="formUpdateFriend">
 
-        <ul validate="friends[currentId].firstname" action="{{actionButton}}" data-role="listview" data-inset="true">
+        <ul validate="form.firstname" action="{{actionButton}}" data-role="listview" data-inset="true">
             <li data-role="fieldcontain">
                 <label for="input-friend-firstname">Firstname</label>
-                <input required ng-minlength="8" ng-model="friends[currentId].firstname" type="text" name="firstname"
+                <input required ng-minlength="8" ng-model="form.firstname" type="text" name="firstname"
                        id="input-friend-firstname" value=""/>
                 <div ng-show="formUpdateFriend.firstname.$error.required" class="input-help">
                     <h4>Firstname is required</h4>
@@ -15,7 +15,7 @@
             </li>
             <li data-role="fieldcontain">
                 <label for="input-friend-lastname">Lastname</label>
-                <input required ng-model="friends[currentId].lastname" type="text" name="lastname"
+                <input required ng-model="form.lastname" type="text" name="lastname"
                        id="input-friend-lastname" value=""/>
                 <div ng-show="formUpdateFriend.lastname.$error.required" class="input-help">
                     <h4>Lastname is required</h4>
@@ -23,7 +23,7 @@
             </li>
             <li jqm-reset="friend" data-role="fieldcontain">
                 <label for="input-friend-registrationDate">Registration Date</label>
-                <input required ng-model="friends[currentId].registrationDate" type="text" data-type="date"
+                <input required ng-model="form.registrationDate" type="text" data-type="date"
                        name="registrationDate" id="input-friend-registrationDate" value=""/>
                 <div ng-show="formUpdateFriend.registrationDate.$error.required" class="input-help">
                     <h4>Date is required</h4>
@@ -31,9 +31,9 @@
             </li>
         </ul>
 
-        <input ng-model="friends[currentId].id" type="hidden" name="id" id="input-friend-id"/>
-        <input ng-model="friends[currentId].version" type="hidden" name="version" id="input-friend-version"/>
-        <input ng-model="friends[currentId].class" type="hidden" name="class" id="input-friend-class"/>
+        <input ng-model="form.id" type="hidden" name="id" id="input-friend-id"/>
+        <input ng-model="form.version" type="hidden" name="version" id="input-friend-version"/>
+        <input ng-model="form.class" type="hidden" name="class" id="input-friend-class"/>
 
     </form>
 </div>
