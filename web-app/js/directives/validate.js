@@ -5,6 +5,7 @@ friend.directive('validate', function () {
 
         link:function postLink(scope, element, attrs) {
                 // watch the expression, and update the UI on change.
+            //attrs.
                 scope.$watch(attrs.validate, function (value) {
 
 

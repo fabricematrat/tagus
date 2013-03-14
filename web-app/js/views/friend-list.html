@@ -1,6 +1,6 @@
-<div data-role="content" id="list-friend-parent">
+<div ng-controller="ListCtrl"data-role="content" id="list-friend-parent">
     <ul data-role="listview" data-inset="true" data-filter="true" id="list-friends">
-       <li list-refresh="list-friends" ng-repeat="item in friends">
+       <li list-refresh="friends" ng-repeat="item in friends">
            <a ng-click="clicked(item.id)"
               data-transition="fade">{{item.lastname}} - {{item.firstname}} - {{item.registrationDate}}</a>
        </li>

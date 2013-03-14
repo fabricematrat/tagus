@@ -1,91 +1,57 @@
 'use strict';
 
-friend.controller('FriendCtrl', function ($scope, $http, friends, friendService) {
+friend.controller('ListCtrl', function ($scope, friendService) {
     var feedService = friendService.feed;
-    $scope.friends = friends;
-    $scope.form = {};
-    $scope.currentId = 0;
-    $scope.actionButton = "ADD";
-
-    $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-
     $scope.init = function () {
         feedService.listItems(function (data) {
-            var _friends = {};
             for (var i = 0; i < data.length; i++) {
                 var element = data[i];
                 if (element) {
-                    _friends[element.id] = element;
+                    $scope.$parent.friends[element.id] = element;
                 }
             }
-            $scope.friends = _friends;
         });
     };
-
     $scope.init();
 
-    $scope.dispatch = function (event) {
-        if (event) {
-            event.stopPropagation();
-        }
-        if ($scope.actionButton == 'ADD') {
-            addItem();
-        } else if ($scope.actionButton == 'UPDATE') {
-            updateItem();
-        } else if ($scope.actionButton == 'CREATE') {
+});
+
+
+friend.controller('FormCtrl', function ($scope, friendService) {
+    var feedService = friendService.feed;
+    $scope.form = {};
+    $scope.$watch("actionButton.state", function (value) {
+        if (value == "SAVE") {
             createItem();
-        }
-
-    };
-
-    $scope.gotoList = function(event) {
-        if(event) {
-           event.stopPropagation();
-        }
-        $scope.actionButton = "ADD";
-        $scope.currentId = 0;
-        $.mobile.changePage($('#section-list-friend'), {changeHash: false});
-        $scope.form = {};
-    };
-
-    //------------ Update item -----------------
-    $scope.clicked = function (val) {
-        $scope.currentId = val;
-        if ($scope.currentId != 0) {
+        } else if (value == "UPDATE") {
+            updateItem();
+        } else if (value == "DELETE") {
+            deleteItem();
+        } if (value == "READ") {
             $scope.form = $scope.friends[$scope.currentId];
         } else {
             $scope.form = {};
+            $scope.formUpdateFriend.$setPristine();
         }
-
-        $scope.actionButton = "UPDATE";
-        $.mobile.changePage($('#section-show-friend'), {changeHash: false});
-    };
+    });
 
     var updateItem = function () {
-        //TODO remove view specific code to directive
         if ($('#input-friend-registrationDate')) {
-          $scope.form.registrationDate =  $('#input-friend-registrationDate').scroller('getDate', true);
+            $scope.form.registrationDate =  $('#input-friend-registrationDate').scroller('getDate', true);
         }
 
         var toJson = {friend:JSON.stringify($scope.form)};
         toJson = $.param(toJson);
         feedService.updateItem(toJson, function (item) {
-            $scope.friends[$scope.currentId] = angular.copy($scope.form);
-            $scope.gotoList();
+            $scope.$parent.friends[item.id] = item;
+            $scope.$parent.actionButton.state = "INIT";
+            $.mobile.changePage($('#section-list-friend'), {changeHash: false});
         });
 
     };
-    //------------ End update item -----------------
 
-    //------------ Add new item -----------------
-    var addItem = function () {
-        $.mobile.changePage($('#section-show-friend'), {changeHash: false});
-        //$scope.friends[0] = {firstname:''};
-        $scope.actionButton = "CREATE";
-    };
 
     var createItem = function () {
-        //TODO remove view specific code to directive
         if ($('#input-friend-registrationDate')) {
             $scope.form.registrationDate =  $('#input-friend-registrationDate').scroller('getDate', true);
         }
@@ -93,28 +59,58 @@ friend.controller('FriendCtrl', function ($scope, $http, friends, friendService)
         var toJson = {friend:JSON.stringify($scope.form)};
         toJson = $.param(toJson);
         feedService.createItem(toJson, function (item) {
-            $scope.friends[item.id] = angular.copy($scope.form);
-            $scope.gotoList();
+            $scope.$parent.friends[item.id] = item;
+            $scope.$parent.actionButton.state = "INIT";
+            $.mobile.changePage($('#section-list-friend'), {changeHash: false});
         });
     };
-    //------------ End add new item -----------------
 
-    //------------ Delete item -----------------
+    var deleteItem = function () {
+        var toJson = {id:$scope.currentId};
+        toJson = $.param(toJson);
+        feedService.deleteItem(toJson, function (item) {
+            delete $scope.$parent.friends[$scope.currentId]
+            $scope.$parent.actionButton.state = "INIT";
+            $.mobile.changePage($('#section-list-friend'), {changeHash: false});
+        });
+    };
+});
+
+friend.controller('FriendCtrl', function ($scope, $http, friends) {
+    $scope.friends = friends;
+    $scope.refresh = false;
+    $scope.currentId = 0;
+    $scope.actionButton = {state:"INIT"};  // possible values: INIT, CREATE, READ, UPDATE, DELETE
+
+    $scope.dispatch = function (event, button) {
+        if (event) {
+           event.stopPropagation();
+        }
+        if ($scope.actionButton.state == "INIT") {
+            $scope.actionButton.state = "CREATE";
+            $.mobile.changePage($('#section-show-friend'), {changeHash: false});
+        }
+        else if ($scope.actionButton.state == "CREATE") {
+            $scope.actionButton.state = "SAVE";
+        }
+        else if ($scope.actionButton.state == "READ") {
+            $scope.actionButton.state = "UPDATE";
+        }
+    };
+
+    $scope.clicked = function (val) {
+        $scope.currentId = val;
+        $scope.actionButton.state = "READ";
+        $.mobile.changePage($('#section-show-friend'), {changeHash: false});
+    };
+
     $scope.delete = function (event) {
         if (event) {
             event.stopPropagation();
         }
-        deleteItem();
+        $scope.actionButton.state = "DELETE";
+        $.mobile.changePage($('#section-list-friend'), {changeHash: false});
     };
 
-    var deleteItem = function () {
 
-        var toJson = {id:$scope.currentId};
-        toJson = $.param(toJson);
-        feedService.deleteItem(toJson, function (item) {
-            delete $scope.friends[$scope.currentId]
-            $scope.gotoList();
-        });
-    };
-    //------------ Delete item -----------------
 });

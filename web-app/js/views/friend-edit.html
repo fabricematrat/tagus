@@ -1,39 +1,29 @@
 <div data-role="content">
-    <form id="form-update-friend" name="formUpdateFriend">
+    <form id="form-update-friend" ng-controller="FormCtrl" name="formUpdateFriend">
 
-        <ul validate="form.firstname" action="{{actionButton}}" data-role="listview" data-inset="true">
+        <ul data-role="listview" data-inset="true">
             <li data-role="fieldcontain">
                 <label for="input-friend-firstname">Firstname</label>
-                <input required ng-minlength="8" ng-model="form.firstname" type="text" name="firstname"
+                <input required ng-minlength="2" ng-model="form.firstname" type="text" name="firstname"
                        id="input-friend-firstname" value=""/>
-                <div ng-show="formUpdateFriend.firstname.$error.required" class="input-help">
-                    <h4>Firstname is required</h4>
-                </div>
-                <div ng-show="formUpdateFriend.firstname.$error.minlength" class="input-help">
-                    <h4>Minimun length of 5</h4>
-                </div>
             </li>
             <li data-role="fieldcontain">
                 <label for="input-friend-lastname">Lastname</label>
-                <input required ng-model="form.lastname" type="text" name="lastname"
+                <input required ng-minlength="3" ng-model="form.lastname" type="text" name="lastname"
                        id="input-friend-lastname" value=""/>
-                <div ng-show="formUpdateFriend.lastname.$error.required" class="input-help">
-                    <h4>Lastname is required</h4>
-                </div>
             </li>
             <li jqm-reset="friend" data-role="fieldcontain">
                 <label for="input-friend-registrationDate">Registration Date</label>
-                <input required ng-model="form.registrationDate" type="text" data-type="date"
+                <input ng-model="form.registrationDate" type="text" data-type="date"
                        name="registrationDate" id="input-friend-registrationDate" value=""/>
-                <div ng-show="formUpdateFriend.registrationDate.$error.required" class="input-help">
-                    <h4>Date is required</h4>
-                </div>
             </li>
         </ul>
 
         <input ng-model="form.id" type="hidden" name="id" id="input-friend-id"/>
         <input ng-model="form.version" type="hidden" name="version" id="input-friend-version"/>
         <input ng-model="form.class" type="hidden" name="class" id="input-friend-class"/>
-
+        <!--<div id="dddd-wrapper" class="ui-screen-hidden">-->
+        <!--<input type="submit"  id="clickHiddenSubmit" value="hidden submit"/>-->
+        <!--</div>-->
     </form>
 </div>

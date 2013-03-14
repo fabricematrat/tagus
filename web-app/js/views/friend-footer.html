@@ -5,13 +5,14 @@
         <div data-role="navbar">
             <ul id="footer-list">
                 <li>
-                    <a ng-show="actionButton == 'UPDATE'" ng-click="delete($event)" data-transition="slide" data-role="button" data-icon="delete" id="delete-friend">Delete</a>
+                    <a ng-show="actionButton.state == 'READ'" ng-click="delete($event)" data-transition="slide" data-role="button" data-icon="delete" id="delete-friend">Delete</a>
                 </li>
                 <li>
-                    <a jqm-valid="true" ng-click="dispatch($event)" data-transition="slide" data-role="button" data-icon="save" id="submit-friend">
-                        <span ng-show="actionButton == 'ADD'">Add</span>
-                        <span ng-show="actionButton == 'UPDATE'">Save</span>
-                        <span ng-show="actionButton == 'CREATE'">Create</span>
+                    <!--<a grails-linked="clickHiddenSubmit" ng-click="dispatch($event)" data-transition="slide" data-role="button" data-icon="save" id="submit-friend">-->
+                    <a ng-click="dispatch($event)" data-transition="slide" data-role="button" data-icon="save" id="submit-friend">
+                        <span ng-show="actionButton.state == 'INIT'">Add</span>
+                        <span ng-show="actionButton.state == 'READ'">Update</span>
+                        <span ng-show="actionButton.state == 'CREATE'">Create</span>
                     </a>
                 </li>
             </ul>
